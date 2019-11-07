@@ -1,4 +1,5 @@
-﻿using Infra.IoC;
+﻿using Domain.Core.Bus;
+using Infra.IoC;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using Transfer.Data.Context;
+using Transfer.Domain.EventHandlers;
+using Transfer.Domain.Events;
 
 namespace Transfer.API
 {
@@ -67,6 +70,14 @@ namespace Transfer.API
             });
 
             app.UseMvc();
+
+            ConfigureEventBus(app);
+        }
+
+        private void ConfigureEventBus(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<TransferCreatedEvent, TransferEventHandler>();
         }
     }
 }
