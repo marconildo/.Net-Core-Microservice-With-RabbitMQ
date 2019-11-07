@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Banking.Data.Context;
-using Infra.IoC;
+﻿using Infra.IoC;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
+using Transfer.Data.Context;
 
-namespace Banking.API
+namespace Transfer.API
 {
     public class Startup
     {
@@ -30,16 +23,16 @@ namespace Banking.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BankingDbContext>(options =>
+            services.AddDbContext<TransferDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("BankingDBConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("TransferDBConnection"));
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Banking Microservice", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = "Transfer Microservice", Version = "v1" });
             });
 
             services.AddMediatR(typeof(Startup));
@@ -70,7 +63,7 @@ namespace Banking.API
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Banking Microservice V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Transfer Microservice V1");
             });
 
             app.UseMvc();
